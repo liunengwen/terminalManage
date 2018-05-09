@@ -22,9 +22,9 @@ public class TestController {
     }
 
     @GetMapping(value = "/datasource")
-    public Device dataSource() {
-        Device device = deviceService.queryAll();
-        return device;
+    public List<Device> dataSource() {
+        List<Device> devices = deviceService.queryAll();
+        return devices;
     }
 
 }

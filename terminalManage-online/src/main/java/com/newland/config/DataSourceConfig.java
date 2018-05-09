@@ -5,6 +5,8 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.newland.environment.DevEnvironment;
 import com.newland.environment.InteEnvironment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -23,6 +25,8 @@ import java.util.Map;
 
 @Configuration
 public class DataSourceConfig implements EnvironmentAware {
+
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     private Environment environment;
 
@@ -48,12 +52,12 @@ public class DataSourceConfig implements EnvironmentAware {
     @Conditional(DevEnvironment.class)
     public DataSource druidDataSource() throws SQLException {
         DruidDataSource druidDataSource = new DruidDataSource();
-        System.out.println(environment);
         druidDataSource.setDriverClassName(environment.getProperty("spring.datasource.driver-class-name"));
         druidDataSource.setUsername(environment.getProperty("spring.datasource.username"));
         druidDataSource.setPassword(environment.getProperty("spring.datasource.password"));
         druidDataSource.setUrl(environment.getProperty("spring.datasource.url"));
         druidDataSource.setFilters("stat,wall");
+        log.info("dataSource初始化完成...");
         return druidDataSource;
     }
 

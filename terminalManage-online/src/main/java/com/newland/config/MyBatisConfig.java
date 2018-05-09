@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,31 +15,33 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 public class MyBatisConfig {
 
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Bean
     @ConditionalOnMissingBean
-    public SqlSessionFactoryBean sqlSessionFactory(DataSource dataSource) {
+    public SqlSessionFactoryBean sqlSessionFactory(DataSource dataSource) throws IOException {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         // 设置数据源
         sqlSessionFactoryBean.setDataSource(dataSource);
         // 设置mybatis的主配置文件
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Resource mybatisConfigXml = resolver.getResource("classpath:mybatis/mybatis-config.xml");
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.newland.*.entity.*");
+
+        // 设置mapper.xml文件路径
+        Resource[] mapperLocation = resolver.getResources("classpath:mapper/*Mapper.xml");
+
         sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
-//        sqlSessionFactoryBean.setTypeAliasesPackage("com.newland.*.entity.*");
+        sqlSessionFactoryBean.setMapperLocations(mapperLocation);
 
-        // 配置 mybatis 插件,后续需要在这里直接添加
-        Interceptor[] plugins = {new PageInterceptor()};
-
-//        Resource[] resources = {new ClassPathResource("classpath:mapper/*Mapper.xml")};
-
-        sqlSessionFactoryBean.setPlugins(plugins);
-//        sqlSessionFactoryBean.setMapperLocations(resources);
+        log.info("sqlSessionFactory初始化完成...");
         return sqlSessionFactoryBean;
     }
 
@@ -46,10 +50,5 @@ public class MyBatisConfig {
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
         mapperScannerConfigurer.setBasePackage("com.newland.mapper");
         return mapperScannerConfigurer;
-    }
-
-    @Bean
-    public PageInterceptor pageInterceptor() {
-        return new PageInterceptor();
     }
 }

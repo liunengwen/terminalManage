@@ -1,5 +1,6 @@
 package com.newland.device.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.newland.device.entity.Device;
 import com.newland.device.mapper.DeviceMapper;
 import com.newland.device.service.DeviceService;
@@ -15,9 +16,10 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceMapper deviceMapper;
 
     @Override
-    public Device queryAll() {
+    public List<Device> queryAll() {
+        PageHelper.startPage(1, 10);
         List<Device> deviceList = deviceMapper.queryAll();
         System.out.println(deviceList.size());
-        return new Device();
+        return deviceList;
     }
 }
