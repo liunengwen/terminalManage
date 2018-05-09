@@ -1,0 +1,23 @@
+server:
+  port: 8480
+  servlet: 
+    context-path: /mtms/
+spring:
+  mvc:
+    static-path-pattern: classpath:/static/
+  resources:
+    static-locations: classpath:/static/
+  thymeleaf:
+    cache: false
+    servlet:
+      content-type: text/html; charset=utf-8
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    template-resolver-order: 1
+  profiles:
+    active: dev
+logging:
+  config: classpath:logback-spring.xml
