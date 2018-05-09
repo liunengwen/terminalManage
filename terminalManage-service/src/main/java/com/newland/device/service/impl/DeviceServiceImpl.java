@@ -19,7 +19,6 @@ public class DeviceServiceImpl implements DeviceService {
     public List<Device> queryAll() {
         PageHelper.startPage(1, 10);
         List<Device> deviceList = deviceMapper.queryAll();
-        System.out.println(deviceList.size());
         return deviceList;
     }
 }

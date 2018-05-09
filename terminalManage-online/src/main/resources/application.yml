@@ -18,6 +18,6 @@ spring:
     suffix: .html
     template-resolver-order: 1
   profiles:
-    active: dev
+    active: inte
 logging:
   config: classpath:logback-spring.xml

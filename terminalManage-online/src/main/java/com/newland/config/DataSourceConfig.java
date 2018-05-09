@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.jndi.JndiObjectFactoryBean;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -42,10 +43,12 @@ public class DataSourceConfig implements EnvironmentAware {
 
     @Bean(name = "default.ds")
     @Conditional(InteEnvironment.class)
-    public JndiObjectFactoryBean jndiObjectFactoryBean() {
+    public DataSource jndiDataSource() throws NamingException {
         JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
-        jndiObjectFactoryBean.setJndiName("java:comp/env/jdbc/mtmsDataSource");
-        return jndiObjectFactoryBean;
+        jndiObjectFactoryBean.setJndiName(environment.getProperty("spring.datasource.jndi-name"));
+        jndiObjectFactoryBean.setProxyInterface(DataSource.class);
+        jndiObjectFactoryBean.afterPropertiesSet();
+        return (DataSource) jndiObjectFactoryBean.getObject();
     }
 
     @Bean(name = "default.ds")
