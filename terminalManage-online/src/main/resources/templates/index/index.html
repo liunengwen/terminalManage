@@ -1,12 +1,256 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Boot and Thymeleaf example</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <title>终端管理</title>
 </head>
 <body>
-    <h3>Spring Boot and Thymeleaf</h3>
-    <p>Hello World!</p>
+<div class="system-wrap">
+    <div class="system-nav" id="systemNav">
+        <ul class="plie-1">
+            <li>
+                <a href="#">终端主数据管理</a>
+                <ul class="plie-2">
+                    <li>
+                        <a th:href="@{/ssomtms/productBatchList.html}">sn号生成</a>
+                    </li>
+                    <li>
+                        <a href="#" data-src="@{/ssomtms/commonPayBatchList.jhtml}">一码付序列号</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">终端信息管理</a>
+                <ul class="plie-2">
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/deviceList.jhtml">终端设备查询</a>
+                    </li>
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/deviceFuncList.jhtml">硬件功能状态查询</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">系统更新管理</a>
+                <ul class="plie-2">
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/otaList.jhtml">补丁上传下线</a>
+                    </li>
+
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/otaReleaseList.jhtml">补丁审核</a>
+                    </li>
+
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/deviceOtaUpdateDetail.jhtml">终端升级明细</a>
+                    </li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#">分组管理</a>
+                <ul class="plie-2">
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/groupList.jhtml">分组列表</a>
+                    </li>
+
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/snBind.jhtml">终端绑定</a>
+                    </li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#">终端控制管理</a>
+                <ul class="plie-2">
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/cmdList.jhtml">指令下发</a>
+                    </li>
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/cmdTracking.jhtml">指令跟踪</a>
+                    </li>
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/customDesktop.jhtml">自定义桌面</a>
+                    </li>
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/deviceLogList.jhtml">终端日志查询</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">资产管理</a>
+                <ul class="plie-2">
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/orgSnList.jhtml">终端机构分配</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">订货及跟踪</a>
+                <ul class="plie-2">
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/selfApplication.jhtml">自投申请</a>
+                    </li>
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/Purchase.jhtml">采购申请</a>
+                    </li>
+                    <li>
+                        <a href="#" data-src="${ctx}/ssomtms/orderList.jhtml">历史订单</a>
+                    </li>
+
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="frame-content-wrap content-bgcolor">
+        <iframe src="" class="frame-content" id="frameContent" width="100%" scrolling="no"></iframe>
+    </div>
+</div>
+<script>
+
+    $(function () {
+        // 初始化导航
+        // initMenuTree();
+        initNav();
+        window.setTimeout(function () {
+            initIframe();
+        }, 300);
+    });
+
+    function initIframe() {
+        var iframe = document.getElementById("frameContent");
+        if (!iframe) {
+            return
+        };
+        try {
+            var height = iframe.contentWindow.document.body.scrollHeight;
+            if (document.getElementsByTagName("body")[0].style.WebkitAnimation != "undefined") {
+                height = $(iframe.contentWindow.document.body).height();
+            }
+            height = height < 626 ? 626 : height;
+            iframe.height = height;
+            $("#systemNav") ? $("#systemNav").height(height) : {};
+
+            if (window.oldPageHeight != height) {
+                // 发送页面高度到A.html
+                sendHeightToA(height);
+                window.oldPageHeight = height;
+            }
+        } catch (ex) {
+        }
+        iframe = null;
+
+        window.setTimeout(function () {
+            initIframe();
+        }, 300);
+    };
+
+    // 发送页面高度到A.html
+    function sendHeightToA(h) {
+        var frame = document.getElementById("frameA");
+        if (!frame) {
+            frame = document.createElement("iframe");
+            frame.id = frame.name = 'frameA';
+            document.body.appendChild(frame);
+            frame.style.display = "none";
+        } else {
+            frame = document.getElementById("frameA");
+        }
+        //frame.src = "A.jsp?h=" + h;
+        // 目前A.jsp的地址
+        //frame.src = "http://106.14.81.172:8180/portal/common/A.jsp?h=" + h;
+        frame.src = "${portalAjsp}?h=" + h;
+    }
+
+    function initMenuTree() {
+        $.ajax({
+            url: "@{/ssomtms/menuTree.jhtml}",
+            type: "get",
+            dateType: "text",
+            success: function (data) {
+                var json = data;
+                var str = "";
+                var forTree = function (o) {
+                    for (var i = 0; i < o.length; i++) {
+                        var urlstr = "",
+                            endStr = "";
+                        try {
+                            if (o[i]["children"] != null) {// 有子菜单
+                                var plie = parseInt(o[i]["plie"]) + 1;
+                                urlstr = "<li><a href=\"#\" title=\"" + o[i]["name"] + "\">" + o[i]["name"] + "</a><ul class=\"plie-" + plie + "\">";
+
+                                endStr = "</ul></li>";
+                            } else {// 无子菜单
+                                urlstr = "<li><a data-src=" + o[i]["url"] + " href=\"#\" title=\"" + o[i]["name"] + "\">" + o[i]["name"] + "</a>";
+
+                                endStr = "</li>";
+                            }
+                            str += urlstr;
+                            if (o[i]["children"] != null) {
+                                forTree(o[i]["children"]);
+                            }
+                            str += endStr;
+                        } catch (e) {
+                        }
+                    }
+                    return str;
+                }
+                /* 添加无级树 */
+                $("#systemNav .plie-1").html(forTree(json));
+
+                initNav();
+            }
+        });
+    }
+
+    // 初始化导航
+    function initNav() {
+        var $systemNav = $("#systemNav"),
+            $lis = $systemNav.find("li"),
+            $systemNavLinks = $systemNav.find("a"),
+            // 收起同级菜单及子菜单
+            closeOtherMenu = function (whichMenuLi) {
+                var $self = whichMenuLi;
+
+                if ($self.siblings("li").length > 0) {
+                    var $siblingLink = $self.siblings("li").find('a');
+                    $siblingLink.removeClass('select');
+
+                    $siblingLink.next("ul").length > 0 ? $siblingLink.next("ul").hide(300) : {};
+                }
+
+                if ($self.children("ul").find("a").length > 0) {
+                    $self.children("ul").find("a").removeClass('select').next("ul").hide(300);
+                }
+            };
+
+        $systemNavLinks.each(function () {
+            var $self = $(this);
+            $self.next().prop('tagName') == "UL" ? $self.append("<em class='caret'>+</em>") : {};
+        });
+
+        $lis.on("click", function () {
+            var $self = $(this),
+                $thisLink = $self.children("a");
+
+            closeOtherMenu($self);
+
+            if ($thisLink.hasClass("select")) {
+                $thisLink.removeClass("select");
+                $thisLink.next("ul").hide(300);
+                return false;
+            }
+
+            if ($thisLink.attr("data-src") != "#") {
+                $("#frameContent").attr("src", $thisLink.attr("data-src"));
+            }
+            $thisLink.addClass("select");
+            $thisLink.next("ul").show(300);
+            return false;
+        });
+    };
+</script>
 </body>
 </html>

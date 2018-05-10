@@ -10,22 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RouteController extends BaseController{
 	
 	@GetMapping(value = "index.html")
-	public String index() throws InterruptedException {
+	public String index() {
 		log.info("打开主页。。。");
-
-		System.out.println(System.currentTimeMillis());
-		if(log.isDebugEnabled())
-			log.debug("测试性能", getName());
-
-
-
-		System.out.println(System.currentTimeMillis());
 		return "index/index";
 	}
 	
-	public static String getName() throws InterruptedException {
-		Thread.sleep(3000);
-		return "刘能文";
-	}
 
 }

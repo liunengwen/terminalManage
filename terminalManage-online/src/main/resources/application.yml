@@ -1,12 +1,5 @@
-server:
-  port: 8480
-  servlet: 
-    context-path: /mtms/
+
 spring:
-  mvc:
-    static-path-pattern: classpath:/static/
-  resources:
-    static-locations: classpath:/static/
   thymeleaf:
     cache: false
     servlet:

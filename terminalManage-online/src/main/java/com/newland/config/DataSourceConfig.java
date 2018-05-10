@@ -33,7 +33,6 @@ public class DataSourceConfig implements EnvironmentAware {
 
     /**
      * Set the {@code Environment} that this component runs in.
-     *
      * @param environment
      */
     @Override
@@ -42,7 +41,7 @@ public class DataSourceConfig implements EnvironmentAware {
     }
 
     @Bean(name = "default.ds")
-    @Conditional(InteEnvironment.class)
+    @Conditional(InteEnvironment.class) // 此处也可简写为 @Profile("inte"),dev环境可以直接取反@Profile("!inte")
     public DataSource jndiDataSource() throws NamingException {
         JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
         jndiObjectFactoryBean.setJndiName(environment.getProperty("spring.datasource.jndi-name"));
